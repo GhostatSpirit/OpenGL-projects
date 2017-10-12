@@ -48,6 +48,9 @@
     <ClInclude Include="bounds.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="include\common\camera.hpp">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -64,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="sb7.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="include\common\camera.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

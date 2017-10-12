@@ -15,6 +15,7 @@ using namespace glm;
 
 #include "common/objloader.hpp"
 #include "common/shader.hpp"
+#include "common/camera.hpp"
 
 #include "bounds.h"
 
@@ -35,9 +36,11 @@ struct StringHelper {
 class BouncingBallApp : public sb7::application
 {
 private:
-	const double INIT_Y = 5.0;
-	const double GROUND_Y = -5.0;
+	const double INIT_Y = 10.0;
+	const double GROUND_Y = 0.0;
 	const double GRAVITY = -20;
+
+	const float PLANE_SIDE_LENGTH = 10;
 
 	double elasticity = 0.3;
 	double veloDecreaseFactor = 0.9;
@@ -131,7 +134,7 @@ private:
 		return Bounds(vec3(xmin, ymin, zmin), vec3(xmax, ymax, zmax));
 	}
 
-	double thrust = 20.0;
+	double thrust = 40.0;
 
 	void processInput(double deltaTime) {
 		int mouseLeft = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT);
@@ -182,6 +185,9 @@ public:
 
 		//bool res = loadOBJ("mario.obj", vertices, uvs, normals);
 
+		// add the plane to vector
+		float half = PLANE_SIDE_LENGTH / 2.0;
+
 		// load the vertices into a VBO
 		glGenBuffers(1, &vertexBuffer);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
@@ -209,14 +215,19 @@ public:
 
 		processInput(deltaTime);
 
-		// Projection matrix : 45?Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
-		// Camera matrix
-		glm::mat4 View = glm::lookAt(
-			glm::vec3(4, 4, -20), // Camera is at (4,3,-3), in World Space
-			glm::vec3(0, 0, 0), // and looks at the origin
-			glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
-		);
+
+		computeMatricesFromInputs(window, deltaTime, height);
+		glm::mat4 Projection = getProjectionMatrix();
+		glm::mat4 View = getViewMatrix();
+
+		//// Projection matrix : 45?Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+		//glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f);
+		//// Camera matrix
+		//glm::mat4 View = glm::lookAt(
+		//	glm::vec3(4, 4, 20), // Camera is at (4,3,-3), in World Space
+		//	glm::vec3(0, 0, 0), // and looks at the origin
+		//	glm::vec3(0, 1, 0)  // Head is up (set to 0,-1,0 to look upside-down)
+		//);
 		// Model matrix : an identity matrix (model will be at the origin)
 		glm::mat4 Model = glm::mat4(glm::vec4(1, 0, 0, 0), 
 			                        glm::vec4(0, 1, 0, 0), 

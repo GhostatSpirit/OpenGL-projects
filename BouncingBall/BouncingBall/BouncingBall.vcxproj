@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="BouncingBall.h" />
     <ClInclude Include="bounds.h" />
+    <ClInclude Include="include\common\camera.hpp" />
     <ClInclude Include="include\common\objloader.hpp" />
     <ClInclude Include="include\common\shader.hpp" />
     <ClInclude Include="Resource.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BouncingBall.cpp" />
+    <ClCompile Include="include\common\camera.cpp" />
     <ClCompile Include="include\common\objloader.cpp" />
     <ClCompile Include="include\common\shader.cpp" />
     <ClCompile Include="sb7.cpp" />
