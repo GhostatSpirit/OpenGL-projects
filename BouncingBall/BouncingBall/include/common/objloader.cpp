@@ -71,9 +71,9 @@ bool loadOBJ(
 			temp_normals.push_back(normal);
 		}
 		else if (lineHeader == "f") {
-			std::string vertex1, vertex2, vertex3;
+			//std::string vertex1, vertex2, vertex3;
 			char delim = 0;
-			unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
+			unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
 
 			linestream >> vertexIndex[0] >> delim >> uvIndex[0];
 			if (linestream.fail()) linestream.clear();
@@ -97,6 +97,24 @@ bool loadOBJ(
 			normalIndices.push_back(normalIndex[0]);
 			normalIndices.push_back(normalIndex[1]);
 			normalIndices.push_back(normalIndex[2]);
+
+			linestream >> vertexIndex[3];
+			if (!linestream.fail()) {
+				// we have a four-vertice polygon here
+				linestream >> delim >> uvIndex[3];
+				if (linestream.fail()) linestream.clear();
+				linestream >> delim >> normalIndex[3];
+
+				vertexIndices.push_back(vertexIndex[0]);
+				vertexIndices.push_back(vertexIndex[2]);
+				vertexIndices.push_back(vertexIndex[3]);
+				uvIndices.push_back(uvIndex[0]);
+				uvIndices.push_back(uvIndex[2]);
+				uvIndices.push_back(uvIndex[3]);
+				normalIndices.push_back(normalIndex[0]);
+				normalIndices.push_back(normalIndex[2]);
+				normalIndices.push_back(normalIndex[3]);
+			}
 		}
 		else {
 			// Probably a comment, eat up the rest of the line
