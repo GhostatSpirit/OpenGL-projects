@@ -32,7 +32,10 @@ float initialFoV = 45.0f;
 float speed = 3.0f; // 3 units / second
 //float mouseSpeed = 0.005f;
 
-float yOffset = 7;
+float yOffset = 5;
+
+float mouseWheelFactor = 5;
+float fovOffset = 0;
 
 
 void computeMatricesFromInputs(GLFWwindow* window, double deltaTime, double height){
@@ -53,19 +56,19 @@ void computeMatricesFromInputs(GLFWwindow* window, double deltaTime, double heig
 	//glm::vec3 up = glm::cross( right, direction );
 
 	// rotate towards top
-	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS){
 		verticalAngle += deltaTime * speed;
 	}
 	// rotate towards bottom
-	if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS){
 		verticalAngle -= deltaTime * speed;
 	}
 	// rotate towards right
-	if (glfwGetKey( window, GLFW_KEY_RIGHT ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS){
 		horizontalAngle +=  deltaTime * speed;
 	}
 	// rotate towards left
-	if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS){
 		horizontalAngle -= deltaTime * speed;
 	}
 
@@ -76,7 +79,7 @@ void computeMatricesFromInputs(GLFWwindow* window, double deltaTime, double heig
 		cameraRadius * cos(verticalAngle) * cos(horizontalAngle)
 	);
 
-	float FoV = initialFoV;// - 5 * glfwGetMouseWheel(); // Now GLFW 3 requires setting up a callback for this. It's a bit too complicated for this beginner's tutorial, so it's disabled instead.
+	float FoV = initialFoV - fovOffset;
 
 	// Projection matrix : 45?Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	ProjectionMatrix = glm::perspective(glm::radians(FoV), 4.0f / 3.0f, 0.1f, 100.0f);
@@ -91,4 +94,9 @@ void computeMatricesFromInputs(GLFWwindow* window, double deltaTime, double heig
 		                        up       // Head is up (set to 0,-1,0 to look upside-down)
 						   );
 
+}
+
+void camera_scroll_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	fovOffset += mouseWheelFactor * ypos;
 }

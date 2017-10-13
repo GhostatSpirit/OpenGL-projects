@@ -23,6 +23,9 @@
 * DEALINGS IN THE SOFTWARE.
 */
 
+// Header file modified by Yang Liu
+// lykavin@hotmail.com
+
 #ifndef __SB7_H__
 #define __SB7_H__
 

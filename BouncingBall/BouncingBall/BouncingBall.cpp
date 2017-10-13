@@ -42,7 +42,7 @@ private:
 
 	const float PLANE_SIDE_LENGTH = 10;
 
-	double elasticity = 0.3;
+	double elasticity = 0.9;
 	double veloDecreaseFactor = 0.9;
 
 	double lastTime = 0;
@@ -87,6 +87,9 @@ private:
 				velocity *= veloDecreaseFactor;
 				/*velocity *= elasticity;*/
 			}
+
+			//// we cannot let the object go below the ground
+			//if (height < GROUND_Y)  height = GROUND_Y;
 		}
 
 
@@ -146,6 +149,11 @@ private:
 			velocity += thrust * deltaTime;
 		}
 
+		int mouseRight = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT);
+		if (mouseRight == GLFW_PRESS && height - objBounds.getEntents()[1] >= GROUND_Y) {
+			velocity -= thrust * deltaTime;
+		}
+
 	}
 
 public:
@@ -174,7 +182,7 @@ public:
 		// Read our .obj file
 		cout << "> Please input .obj file name: $ ";
 		string filename;
-		cin >> filename;
+		cin >> noskipws >> filename;
 
 		// try to open file with the given file name
 		std::ifstream file(filename);
@@ -201,6 +209,8 @@ public:
 		objBounds = getBounds(vertices);
 		cout << "> Bounds: max(" << (objBounds.getMax())[0] << ", " << (objBounds.getMax())[1] << ", " << (objBounds.getMax())[2] << "), ";
 		cout << "min(" << (objBounds.getMin())[0] << ", " << (objBounds.getMin())[1] << ", " << (objBounds.getMin())[2] << ")." << endl;
+
+		glfwSetScrollCallback(window, camera_scroll_callback);
 	}
 
 	virtual void render(double currentTime)
